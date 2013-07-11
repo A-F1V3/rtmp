@@ -58,9 +58,7 @@ func readChunkHeader (r io.Reader) (m chunkHeader) {
 	if m.csid == 0 {
 		j := ReadInt(r, 1)
 		m.csid = j + 64
-	}
-
-	if m.csid == 0x3f {
+	} else if m.csid == 0x01 {
 		j := ReadInt(r, 2)
 		m.csid = j + 64
 	}
