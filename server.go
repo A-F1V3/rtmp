@@ -149,6 +149,12 @@ func handlePublish(mr *MsgStream) {
 	<-eventDone
 }
 
+func handleFCPublish(mr *MsgStream, strid int, trans float64) {
+	mr.WriteAMFCmd(3, 0, []AMFObj {
+		AMFObj { atype : AMF_STRING, str : "onFCPublish", },
+	})
+}
+
 func handleSetChunkSize(mr *MsgStream, size int){
 	if size > 0xffffff {
 		mr.chunkSize = 0xffffff
@@ -416,6 +422,11 @@ func serve(mr *MsgStream) {
 				handlePublish(mr)
 			case "play":
 				handlePlay(mr, m.strid)
+
+			case "FCPublish":
+				a2 := ReadAMF(m.data)
+				handleFCPublish(mr, m.strid, a2.f64)
+
 			}
 
 		case MSG_CHUNK_SIZE:
