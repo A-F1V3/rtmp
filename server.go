@@ -383,9 +383,6 @@ func serve(mr *MsgStream) {
 
 	for {
 		m := mr.ReadMsg()
-		if m == nil {
-			continue
-		}
 
 		//l.Printf("stream %v: msg %v", mr, m)
 

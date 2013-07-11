@@ -249,52 +249,53 @@ func (r *MsgStream) WriteMsg32(csid, typeid, strid, v int) {
 }
 
 func (r *MsgStream) ReadMsg() *Msg {
-	ch := readChunkHeader(r.r)
-	m, ok := r.Msg[ch.csid]
-	if !ok {
-		//l.Printf("chunk:   new")
-		m = &Msg{ch, &bytes.Buffer{}, false, 0}
-		r.Msg[ch.csid] = m
-	}
-
-	switch ch.cfmt {
-	case 0:
-		m.ts = ch.ts
-		m.mlen = ch.mlen
-		m.typeid = ch.typeid
-		m.curts = m.ts
-	case 1:
-		m.tsdelta = ch.tsdelta
-		m.mlen = ch.mlen
-		m.typeid = ch.typeid
-		m.curts += m.tsdelta
-	case 2:
-		m.tsdelta = ch.tsdelta
-	}
-
-	left := m.mlen - m.data.Len()
-	if size > left {
-		size = left
-	}
-	//l.Printf("chunk:   %v", m)
-	if size > 0 {
-		io.CopyN(m.data, r.r, int64(size))
-	}
-		size := r.chunkSize
-
-	if size == left {
-		rm := new(Msg)
-		*rm = *m
-		l.Printf("event: fmt%d %v curts %d pre %v", ch.cfmt, m, m.curts, m.data.Bytes()[:9])
-		if m.typeid == MSG_VIDEO && int(m.data.Bytes()[0]) == 0x17 {
-			rm.key = true
-		} else {
-			rm.key = false
+	for{
+		ch := readChunkHeader(r.r)
+		m, ok := r.Msg[ch.csid]
+		if !ok {
+			//l.Printf("chunk:   new")
+			m = &Msg{ch, &bytes.Buffer{}, false, 0}
+			r.Msg[ch.csid] = m
 		}
-		m.data = &bytes.Buffer{}
-		return rm
+		
+		switch ch.cfmt {
+		case 0:
+			m.ts = ch.ts
+			m.mlen = ch.mlen
+			m.typeid = ch.typeid
+			m.curts = m.ts
+		case 1:
+			m.tsdelta = ch.tsdelta
+			m.mlen = ch.mlen
+			m.typeid = ch.typeid
+			m.curts += m.tsdelta
+		case 2:
+			m.tsdelta = ch.tsdelta
+		}
+
+		left := m.mlen - m.data.Len()
+		size := r.chunkSize
+		if size > left {
+			size = left
+		}
+		//l.Printf("chunk:   %v", m)
+		if size > 0 {
+			io.CopyN(m.data, r.r, int64(size))
+		}
+
+		if size == left {
+			rm := new(Msg)
+			*rm = *m
+			l.Printf("event: fmt%d %v curts %d pre %v", ch.cfmt, m, m.curts, m.data.Bytes()[:9])
+			if m.typeid == MSG_VIDEO && int(m.data.Bytes()[0]) == 0x17 {
+				rm.key = true
+			} else {
+				rm.key = false
+			}
+			m.data = &bytes.Buffer{}
+			return rm
+		}
 	}
 
-	return nil
 }
 
