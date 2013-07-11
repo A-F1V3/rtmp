@@ -149,6 +149,14 @@ func handlePublish(mr *MsgStream) {
 	<-eventDone
 }
 
+func handleSetChunkSize(mr *MsgStream, size int){
+	if size > 0xffffff {
+		mr.chunkSize = 0xffffff
+	} else if size > 0 {
+		mr.chunkSize = size
+	}
+}
+
 type testsrc struct {
 	r *bufio.Reader
 	dir string
@@ -411,6 +419,9 @@ func serve(mr *MsgStream) {
 			case "play":
 				handlePlay(mr, m.strid)
 			}
+
+		case MSG_CHUNK_SIZE:
+			handleSetChunkSize(mr, ReadInt(m.data,1))
 		}
 	}
 }

@@ -119,6 +119,7 @@ type MsgStream struct {
 	extraA, extraV []byte
 	que chan *Msg
 	l *log.Logger
+	chunkSize int
 }
 
 type Msg struct {
@@ -149,6 +150,7 @@ func NewMsgStream(r io.ReadWriteCloser) *MsgStream {
 		r:stream{r},
 		Msg:map[int]*Msg{},
 		id:fmt.Sprintf("#%d", mrseq),
+		chunkSize:128,
 	}
 }
 
@@ -271,7 +273,6 @@ func (r *MsgStream) ReadMsg() *Msg {
 	}
 
 	left := m.mlen - m.data.Len()
-	size := 128
 	if size > left {
 		size = left
 	}
@@ -279,6 +280,7 @@ func (r *MsgStream) ReadMsg() *Msg {
 	if size > 0 {
 		io.CopyN(m.data, r.r, int64(size))
 	}
+		size := r.chunkSize
 
 	if size == left {
 		rm := new(Msg)
