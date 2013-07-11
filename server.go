@@ -89,7 +89,7 @@ func handleConnect(mr *MsgStream, trans float64, app string) {
 		AMFObj { atype : AMF_NUMBER, f64 : trans, },
 		AMFObj { atype : AMF_OBJECT,
 			obj : map[string] AMFObj {
-				"fmtVer" : AMFObj { atype : AMF_STRING, str : "FMS/3,0,1,123", },
+				"flashVer" : AMFObj { atype : AMF_STRING, str : "FMS/3,0,1,123", },
 				"capabilities" : AMFObj { atype : AMF_NUMBER, f64 : 31, },
 			},
 		},
