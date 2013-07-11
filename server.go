@@ -163,6 +163,11 @@ func handleSetChunkSize(mr *MsgStream, size int){
 	}
 }
 
+func handleAbort(mr *MsgStream, chunkStreamId int){
+	//TODO: implement this
+	l.Printf("ABORT RECIEVED AND NOTHING WAS DONE ABOUT IT")
+}
+
 type testsrc struct {
 	r *bufio.Reader
 	dir string
@@ -431,6 +436,10 @@ func serve(mr *MsgStream) {
 
 		case MSG_CHUNK_SIZE:
 			handleSetChunkSize(mr, ReadInt(m.data,1))
+
+		case MSG_ABORT:
+			handleAbort(mr, ReadInt(m.data,1))
+
 		}
 	}
 }
