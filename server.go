@@ -385,14 +385,15 @@ func serve(mr *MsgStream) {
 		m := mr.ReadMsg()
 
 		//l.Printf("stream %v: msg %v", mr, m)
-
-		if m.typeid == MSG_AUDIO || m.typeid == MSG_VIDEO {
+		switch m.typeid {
+		
+		case MSG_AUDIO, MSG_VIDEO:
 //			mr.l.Printf("%d,%d", m.typeid, m.data.Len())
 			event <- eventS{id:E_DATA, mr:mr, m:m}
 			<-eventDone
-		}
+		
 
-		if m.typeid == MSG_AMF_CMD || m.typeid == MSG_AMF_META {
+		case MSG_AMF_CMD, MSG_AMF_META:
 			a := ReadAMF(m.data)
 			//l.Printf("server: amfobj %v\n", a)
 			switch a.str {
