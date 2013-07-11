@@ -438,6 +438,16 @@ func serve(mr *MsgStream) {
 				a2 := ReadAMF(m.data)
 				handleFCPublish(mr, m.strid, a2.f64)
 
+			default:
+				//TODO: releaseStream
+				//TODO: FCUnpublish
+				//TODO: deleteStream
+
+				//print the unhandled AMF command
+				l.Printf("UNHANDLED: ",a.str)
+				b := ReadBuf(m.data, 100)
+				l.Printf(string(b))
+
 			}
 
 		case MSG_CHUNK_SIZE:
