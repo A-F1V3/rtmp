@@ -168,6 +168,12 @@ func handleAbort(mr *MsgStream, chunkStreamId int){
 	l.Printf("ABORT RECIEVED AND NOTHING WAS DONE ABOUT IT")
 }
 
+func handleACKSize(mr *MsgStream, windowACKSize int){
+	//TODO: Actually do something useful with this message
+	l.Printf("handleACKSize: ", windowACKSize)
+	mr.WriteMsg32(0, 3, mr.strid, windowACKSize)
+}
+
 type testsrc struct {
 	r *bufio.Reader
 	dir string
@@ -442,6 +448,9 @@ func serve(mr *MsgStream) {
 
 		case MSG_ACK:
 			l.Printf("MSG_ACK RECIEVED, unimplemented!")
+
+		case MSG_ACK_SIZE:
+			handleACKSize(mr, ReadInt(m.data,1))	
 
 		default:
 			l.Printf("UNHANDLED Message Type: ",m.typeid)
