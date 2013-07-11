@@ -440,6 +440,12 @@ func serve(mr *MsgStream) {
 		case MSG_ABORT:
 			handleAbort(mr, ReadInt(m.data,1))
 
+		case MSG_ACK:
+			l.Printf("MSG_ACK RECIEVED, unimplemented!")
+
+		default:
+			l.Printf("UNHANDLED Message Type: ",m.typeid)
+
 		}
 	}
 }
