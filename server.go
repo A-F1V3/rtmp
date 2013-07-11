@@ -79,6 +79,11 @@ func handleConnect(mr *MsgStream, trans float64, app string) {
 	mr.WriteMsg32(2, MSG_BANDWIDTH, 0, 5000000)
 	mr.WriteMsg32(2, MSG_CHUNK_SIZE, 0, 128)
 
+	var b bytes.Buffer
+	WriteInt(&b,0,2)
+	WriteInt(&b, mr.strid,4)
+	mr.WriteMsg(0, 2, MSG_USER, 0, 0, b.Bytes())
+
 	mr.WriteAMFCmd(3, 0, []AMFObj {
 		AMFObj { atype : AMF_STRING, str : "_result", },
 		AMFObj { atype : AMF_NUMBER, f64 : trans, },
