@@ -109,9 +109,10 @@ func parseChal(b []byte, peerKey []byte, key []byte) (dig []byte, err int) {
 	var offs int
 	if offs = findDigest(b[1:], peerKey, 772); offs == -1 {
 		if offs = findDigest(b[1:], peerKey, 8); offs == -1 {
-			l.Printf("handshake: digest not found")
-			err = 1
-			return
+			offs = 0;
+			// l.Printf("handshake: digest not found")
+			// err = 1
+			// return
 		}
 	}
 
