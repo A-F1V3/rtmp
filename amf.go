@@ -98,3 +98,12 @@ func WriteAMF(r io.Writer, a AMFObj) {
 	}
 }
 
+func (a AMFObj) String() (s string){
+	str := a.str +"{"
+	for k, v := range a.obj {
+		str += k + ": " + v.String()
+	}
+	str += "}"
+	return str
+}
+
