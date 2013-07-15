@@ -171,7 +171,7 @@ func handleAbort(mr *MsgStream, chunkStreamId int){
 func handleACKSize(mr *MsgStream, windowACKSize int){
 	//TODO: Actually do something useful with this message
 	l.Printf("handleACKSize: ", windowACKSize)
-	mr.WriteMsg32(0, 3, mr.strid, windowACKSize)
+	//mr.WriteMsg32(0, 3, mr.strid, windowACKSize)
 }
 
 type testsrc struct {
