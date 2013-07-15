@@ -7,7 +7,7 @@ Run a simple server
 
 	package main
 
-	import "github.com/go-av/rtmp"
+	import "github.com/A-F1V3/rtmp"
 
 	func main() {
 		rtmp.SimpleServer()
