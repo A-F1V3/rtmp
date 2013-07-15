@@ -438,6 +438,9 @@ func serve(mr *MsgStream) {
 				a2 := ReadAMF(m.data)
 				handleFCPublish(mr, m.strid, a2.f64)
 
+			case "onFI":
+				l.Printf("onFI recieved")
+
 			default:
 				//TODO: releaseStream
 				//TODO: FCUnpublish
